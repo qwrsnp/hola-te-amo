@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>michi</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: #000;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        #contenedor {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Foto de portada */
+        #gato-estatico {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            z-index: 10;
+            transition: opacity 1s ease;
+        }
+
+        #galeria {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .foto {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+        }
+
+        /* Animación rápida: 12s total / 6 fotos = 2s cada una */
+        .en-bucle {
+            animation: corteSeco 12s infinite;
+        }
+
+        .foto:nth-child(1) { animation-delay: 0s; }
+        .foto:nth-child(2) { animation-delay: 2s; }
+        .foto:nth-child(3) { animation-delay: 4s; }
+        .foto:nth-child(4) { animation-delay: 6s; }
+        .foto:nth-child(5) { animation-delay: 8s; }
+        .foto:nth-child(6) { animation-delay: 10s; }
+
+        @keyframes corteSeco {
+            0%, 1% { opacity: 1; }   /* Aparece instantáneo */
+            16.6% { opacity: 1; }    /* Dura 2 seg */
+            16.7%, 100% { opacity: 0; } /* Desaparece instantáneo */
+        }
+
+        .cartel {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 12px 25px;
+            border-radius: 50px;
+            z-index: 20;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="contenedor" onclick="activarTodo()">
+        <div id="instruccion" class="cartel">Tocá al michi</div>
+        
+        <img src="gato.png" id="gato-estatico">
+
+        <div id="galeria">
+            <img src="gato2.png" class="foto">
+            <img src="gato3.png" class="foto">
+            <img src="gato4.png" class="foto">
+            <img src="gato5.png" class="foto">
+            <img src="gato6.png" class="foto">
+            <img src="gato7.png" class="foto">
+        </div>
+
+        <audio id="musica" loop>
+            <source src="tim.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script>
+        function activarTodo() {
+            const statico = document.getElementById('gato-estatico');
+            const galeria = document.getElementById('galeria');
+            const instruccion = document.getElementById('instruccion');
+            const fotos = document.querySelectorAll('.foto');
+            const audio = document.getElementById('musica');
+
+            // 1. Play al audio local (Tim Dom Dom)
+            audio.play().catch(e => console.log("Fijate si el nombre del mp3 está bien escrito"));
+
+            // 2. Transición visual
+            statico.style.opacity = '0';
+            instruccion.style.display = 'none';
+
+            // 3. Mostramos galería y arrancamos bucle
+            galeria.style.display = 'block';
+            fotos.forEach(f => f.classList.add('en-bucle'));
+
+            setTimeout(() => {
+                statico.style.display = 'none';
+            }, 1000);
+
+            // Bloqueamos el click para que no reinicie
+            document.getElementById('contenedor').onclick = null;
+        }
+    </script>
+</body>
+</html>
